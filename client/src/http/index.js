@@ -16,16 +16,26 @@ $api.interceptors.response.use((config) => {return config}, async (error) => {
 
     const originalRequest = error.config;
 
-    if (error.response.status === 401) {
+    if (error.response.status === 400) {
+        return {message:error.response.data.message}
+    }
+
+    if (error.response.status === 500) {
+        return {message:error.response.data.message}
+    }
+
+    if (error.response.status === 401 && error.config && !error.config._isRerty) {
         try {
+            originalRequest._isRerty= true;
             const response = await axios.get(`${API_URL}/refresh`, {withCredentials:true})
-            console.log(response);
             localStorage.setItem('jwt', response.data.accessToken);
             return $api.request(originalRequest);
         }catch (e){
+            return {message:error.response.data.message}
             console.log("Не авторизован!");
         }
     }
+    throw error;
 })
 
 

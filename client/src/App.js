@@ -7,7 +7,9 @@ import { observer } from 'mobx-react-lite';
 const App = () => {
   const {store} = useContext(Context);
 
-  useEffect(() => {if (localStorage.getItem('jwt')) {store.checkAuth()}}, [])
+  useEffect(() => {
+      if (localStorage.getItem('jwt')) store.checkAuth();
+      }, [])
 
   const clickLogOut = () => store.logout();
 

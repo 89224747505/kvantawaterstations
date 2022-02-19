@@ -17,6 +17,7 @@ const LoginForm = () => {
     const {store} = useContext(Context);
     return (
         <div>
+            <h1>{store.message}</h1>
             <div>
                 <input
                     onChange={onChangeEmail}
