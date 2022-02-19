@@ -1,26 +1,41 @@
-import logo from './logo.svg';
+import React, {useContext, useEffect} from 'react';
 import './App.css';
+import LoginForm from "./components/LoginForm/LoginForm";
+import {Context} from "./index";
+import { observer } from 'mobx-react-lite';
 
+const App = () => {
+  const {store} = useContext(Context);
 
-function App() {
+  useEffect(() => {if (localStorage.getItem('jwt')) {store.checkAuth()}}, [])
+
+  const clickLogOut = () => store.logout();
+
+  const clickGetUsers = () => store.getUsers();
+
+  if (store.isLoading) return <h1>Загрузка данных с сервера...</h1>
+
+  if (!store.isAuth) return <LoginForm/>
+
+  let users, isUser = false;
+
+  if (store.users) {
+    isUser = true
+    users = store.users;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <h1>{store.isAuth ? `Пользователь авторизован ${store.user.email}` : "АВТОРИЗУЙТЕСЬ"}</h1>
+        <div>
+          <button onClick={clickLogOut}>Выйти из аккаунта</button>
+        </div>
+        <div>
+          <button onClick={clickGetUsers}>Получить список пользователей</button>
+        </div>
+        {isUser ? users.map(user => <div key={user.email}>{user.email}</div>) : null}
+      </div>
   );
 }
 
-export default App;
+export default observer(App);
