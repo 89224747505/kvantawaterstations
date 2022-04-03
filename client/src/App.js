@@ -8,7 +8,7 @@ const App = () => {
   const {store} = useContext(Context);
 
   useEffect(() => {
-      if (localStorage.getItem('jwt')) store.checkAuth();
+      if (localStorage.getItem('AccessJwt')) store.checkAuth();
       }, [])
 
   const clickLogOut = () => store.logout();
@@ -28,7 +28,10 @@ const App = () => {
 
   return (
       <div>
-        <h1>{store.isAuth ? `Пользователь авторизован ${store.user.email}` : "АВТОРИЗУЙТЕСЬ"}</h1>
+          {store.message === ""
+              ? <h1>{store.isAuth ? `Пользователь авторизован ${store.user.email}` : "АВТОРИЗУЙТЕСЬ"}</h1>
+              : <h1>{store.message}</h1>
+          }
         <div>
           <button onClick={clickLogOut}>Выйти из аккаунта</button>
         </div>

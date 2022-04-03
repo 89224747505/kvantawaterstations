@@ -4,8 +4,8 @@ const {User} = require("../models/models");
 class TokenService {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     generateTokens(payload){
-        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {expiresIn:'10s'});
-        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {expiresIn:'30s'});
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {expiresIn:process.env.ACCESS_EXPIRE});
+        const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {expiresIn:process.env.REFRESH_EXPIRE});
         return {
             accessToken,
             refreshToken

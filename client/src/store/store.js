@@ -10,6 +10,7 @@ export default class Store {
     isLoading = false;
     users = [];
     message = '';
+    isSms = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -17,6 +18,10 @@ export default class Store {
 
     setAuth(bool) {
         this.isAuth = bool;
+    }
+
+    setSms(bool) {
+        this.isSms = bool;
     }
 
     setUser(user) {
@@ -35,38 +40,41 @@ export default class Store {
         this.message = message;
     }
 
-    async login(email, password) {
+    async login(email, password, smsMessage) {
         try {
-            const response = await AuthService.login(email, password);
+            this.setSms(false);
+            this.setMessage("");
+            const response = await AuthService.login(email, password, smsMessage);
             if (response.message) {
                 this.setMessage(response.message);
                 this.setAuth(false);
                 return
             }
+            if (response.status === 201) {
+                this.setAuth(false);
+                this.setSms(true);
+                return
+            }
             if (response.data.user.isActivated) {
-                localStorage.setItem('jwt', response.data.accessToken);
+                localStorage.setItem('AccessJwt', response.data.accessToken);
                 this.setAuth(true);
                 this.setUser(response.data.user);
-            }else this.setMessage("Активируйте свой аккунт")
+            }else this.setMessage("Активируйте свой аккунт на почте")
         }
         catch (e) {
             console.log("Ошибка");
         }
     }
 
-    async registration(email, password) {
+    async registration(email, password, phone) {
         try {
-            const response = await AuthService.registration(email, password);
+            const response = await AuthService.registration(email, password, phone);
             if (response.message) {
                 this.setMessage(response.message);
                 this.setAuth(false);
                 return
             }
-            if (response.data.user.isActivated) {
-                localStorage.setItem('jwt', response.data.accessToken);
-                this.setAuth(true);
-                this.setUser(response.data.user);
-            }else this.setMessage("Активируйте свой аккунт");
+            this.setMessage("Активируйте свой аккунт на почте");
         }
         catch (e) {
             console.log("Ошибка");
@@ -81,7 +89,7 @@ export default class Store {
                 this.setAuth(false);
                 return
             }
-            localStorage.removeItem('jwt');
+            localStorage.removeItem('AccessJwt');
             this.setAuth(false);
             this.setUser({});
             this.setUsers([]);
@@ -102,7 +110,7 @@ export default class Store {
                 return
             }
             if (response.data.user.isActivated) {
-                localStorage.setItem('jwt', response.data.accessToken);
+                localStorage.setItem('AccessJwt', response.data.accessToken);
                 this.setAuth(true);
                 this.setUser(response.data.user);
             }else this.setMessage("Активируйте свой аккунт")
@@ -119,9 +127,8 @@ export default class Store {
         this.setLoading(true);
         try {
             const response = await UserService.fetchUsers();
-            if (response.message) {
+            if (response.err === 403) {
                 this.setMessage(response.message);
-                this.setAuth(false);
                 return
             }
             this.setUsers(response.data);

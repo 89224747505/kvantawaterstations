@@ -1,0 +1,143 @@
+.loginForm {
+    width: 100%;
+    padding: 2em;
+    position: relative;
+    border-radius: 10px;
+    border: 2px solid #b12816;
+    box-shadow: 0px 7px 16px -3px rgba(0, 0, 0, 0.5);
+    background: #bc3220;
+    background: -webkit-gradient(left top, right top, color-stop(0%, #bc3220), color-stop(29%, #db4a37), color-stop(50%, #db4a37), color-stop(71%, #db4a37), color-stop(100%, #bc3220));
+    background: -webkit-linear-gradient(left, #bc3220 0%, #db4a37 29%, #db4a37 50%, #db4a37 71%, #bc3220 100%);
+    background: linear-gradient(to right, #bc3220 0%, #db4a37 29%, #db4a37 50%, #db4a37 71%, #bc3220 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bc3220', endColorstr='#bc3220', GradientType=1 );
+}
+.loginForm:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+}
+@media screen and (min-width: 600px) {
+    .loginForm {
+        width: 50vw;
+        max-width: 15em;
+    }
+}
+
+.flexRow {
+    margin-bottom: 1em;
+}
+
+.logo {
+    margin-bottom: 50px;
+    color: #fff;
+    width: 100%;
+}
+.logo >img {
+    width: 100%;
+}
+
+.lfInput {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 1em 2em;
+    border: 0;
+    width: 100%;
+    box-sizing: border-box;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-family: Open Sans, Arial, sans-serif;
+    text-shadow: 1px 1px 1px #232323;
+    border-radius: 25px;
+    background: #bc3220;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #bc3220), color-stop(100%, #fa5846));
+    background: -webkit-linear-gradient(top, #bc3220 0%, #fa5846 100%);
+    background: linear-gradient(to bottom, #bc3220 0%, #fa5846 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bc3220', endColorstr='#fa5846', GradientType=0 );
+}
+
+.lfInput:focus {
+    outline: none;
+    -webkit-transition: -webkit-transform .25s ease;
+    transition: -webkit-transform .25s ease;
+    transition: transform .25s ease;
+    transition: transform .25s ease, -webkit-transform .25s ease;
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
+}
+
+.redBorder {
+    border: 1px solid #fa9f17;
+    text-decoration-thickness: 0.7px;
+    text-decoration-color: yellow;
+    text-decoration-style: wavy;
+    text-decoration-line:underline;
+}
+
+.lfSubmit {
+    display: block;
+    padding: 1em;
+    width: 100%;
+    box-shadow: 0px 7px 16px -3px rgba(0, 0, 0, 0.5);
+    background: #ffbf00;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #ffbf00), color-stop(100%, #fa9f17));
+    background: -webkit-linear-gradient(top, #ffbf00 0%, #fa9f17 100%);
+    background: linear-gradient(to bottom, #ffbf00 0%, #fa9f17 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffbf00', endColorstr='#fa9f17', GradientType=0 );
+    border: 0;
+    border-radius: 30px;
+    color: #fff;
+    margin-top: 50px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-shadow: -1px -1px #b86200, 0 1px 0 #ecb76b;
+}
+.lfSubmit:focus {
+    outline: none;
+    -webkit-transition: -webkit-transform .25s ease;
+    transition: -webkit-transform .25s ease;
+    transition: transform .25s ease;
+    transition: transform .25s ease, -webkit-transform .25s ease;
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
+}
+
+.lForgot {
+    margin-top: 0em;
+    color: #ffffff;
+    font-size: 0.5em;
+    text-align: center;
+    float: left;
+    padding-bottom: 10px;
+}
+
+.message {
+    padding-top: 10px;
+    color: #ffffff;
+    font-size: 0.5em;
+}
+
+.wrapperMessage {
+    display: flex;
+    justify-content: center;
+}
+
+::-webkit-input-placeholder {
+    color: #ffffff;
+}
+
+::-moz-placeholder {
+    color: #ffffff;
+}
+
+:-ms-input-placeholder {
+    color: #ffffff;
+}
+
+::placeholder {
+    color: #ffffff;
+}

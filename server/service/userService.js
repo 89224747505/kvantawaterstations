@@ -3,18 +3,20 @@ const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const MailService = require('../service/mailService')
 const TokenService = require('../service/tokenService');
+const SmsService = require('../service/smsService');
 const UserDto = require('../DTO/userDto');
 const ApiError = require('../exeptions/apiError');
+const axios = require('axios');
 
 
 class UserService {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    async registration (email, password) {
+    async registration (email, password, phone) {
         //Ищем пользователя в БД с таким же почтовым адресом
         const candidate = await User.findOne({where:{email}});
 
         //Если найден пользователь с таким почтовым адресом, то выдать ошибку регистрации на данный емейл
-        if (candidate) throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует`);
+        if (candidate) throw ApiError.BadRequest(`Пользователь ${email} уже существует`);
 
         //Хэшируем переданный нам пароль для записи в БД закодированного пароля
         const hashPassword = await bcrypt.hash(password, 3);
@@ -23,7 +25,7 @@ class UserService {
         const activationLink = uuid.v4();
 
         //Создаем нового пользователя
-        const user = await User.create({email, password:hashPassword, activationLink});
+        const user = await User.create({email, password:hashPassword, activationLink, phone});
 
         //Отправляем письмо для активации аккаунта на емейл кандидата
         await MailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
@@ -51,15 +53,15 @@ class UserService {
         const userUpdateActivated = await User.update({isActivated: true}, {where:{activationLink}});
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    async login(email, password) {
+    async login(email, password, sms) {
         //Ищем пользователя в БД с таким же почтовым адресом
         const user = await User.findOne({where:{email}});
 
         //Если найден пользователь с таким почтовым адресом, то выдать ошибку регистрации на данный емейл
-        if (!user) throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} не найден`);
+        if (!user) throw ApiError.BadRequest(`Пользователь ${email} не найден`);
 
         //Если аккаунт не активирован, то отправляется ошибка
-        if (!user.dataValues.isActivated) throw ApiError.BadRequest(`Пользователь не активировал аккаунт`);
+        if (!user.dataValues.isActivated) throw ApiError.BadRequest(`Пользователь не активировал аккаунт на почте`);
 
         //Хэшируем переданный нам пароль и сравниваем его с паролем из БД
         const isComparePasswords = await bcrypt.compare(password, user.dataValues.password);
@@ -70,13 +72,46 @@ class UserService {
         //Создаем DTO и выбираем нужные нам поля в объекте для более удобной работы
         const userDto = new UserDto(user.dataValues);
 
-        //Генерируем новые ACCESS и REFRESH токены
-        const tokens = TokenService.generateTokens({...userDto})
+        //Проверяем условие если смс-сообщение еще не отправлено
+        if (typeof sms == 'undefined') {
+            // Доставем номер телефона из DTO пользователя
+            const phoneNumber = userDto.phone;
 
-        //Обновляем у пользователя в БД значение refreshToken
-        await User.update({refreshToken:tokens.refreshToken},{where:{id:userDto.id}})
+            // Достаем login из переменных окружения
+            const login = process.env.SMS_USER;
 
-        return {...tokens,user: userDto}
+            // Достаем пароль из переменных окружения
+            const passSms = process.env.SMS_PASSWORD;
+
+            // Генерируем случайное число размером взятым из переменной окружения и передаем в messageCode для последующей отправки
+            let messageCode = SmsService.generateNumberForMessage(process.env.SMS_NUMBER_OF_SYMBOLS);
+
+            try {
+                // Отправляем запрос для формирования СМС-сообщения по номеру:phoneNumber с текстом messageCode
+                // Для авторизации Basic токеном также передаем login и passSms
+                //await SmsService.sendSms(phoneNumber, messageCode, login, passSms);
+                console.log(messageCode);
+                //Обновляем у пользователя в БД значение messageSms присваиваем сгенерированный messageCode
+                await User.update({messageSms: messageCode}, {where: {id: userDto.id}})
+
+                // Возвращем 1, это означает, что СМС-сообщение отправлено и можно делать ответ для дальнейшего подтверждения
+                return 1;
+            } catch (e) {
+                // Если приходит ошибка из СМС-сервиса, то возвращаем ответ -1
+                return -1;
+            }
+        }
+        if (sms && userDto.messageSms === sms) {
+
+            //Генерируем новые ACCESS и REFRESH токены
+            const tokens = TokenService.generateTokens({...userDto})
+
+            //Обновляем у пользователя в БД значение refreshToken
+            await User.update({refreshToken: tokens.refreshToken}, {where: {id: userDto.id}})
+
+            return {...tokens, user: userDto}
+        } else return -2;
+        return 0;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async logout(refreshToken) {

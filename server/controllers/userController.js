@@ -10,14 +10,14 @@ class UserController {
             //Достаем из реквеста ошибки, если таковые имеются
             const errors = validationResult(req);
 
-            //Проверяем если есть ошибки, то выдаем ошибк ивалидации и отправляем их массивом
+            //Проверяем если есть ошибки, то выдаем ошибки валидации и отправляем их массивом
             if (!errors.isEmpty()) return next(ApiError.BadRequest("Ошибка при валидации", errors.array()));
 
             //Дастаем данные из тела запроса
-            const {email, password} = req.body;
+            const {email, password, phone} = req.body;
 
             //Регистрируем нового пользователя с помощью сервиса регистарции пользователей
-            const userData = await UserService.registration(email, password);
+            const userData = await UserService.registration(email, password, phone);
 
             //Помещаем refreshToken в cookie и задаем ему параметры жизни 30 дней и флаг,
             //который не позволяет изменять куку на стороне клиента с помощью JS
@@ -33,10 +33,21 @@ class UserController {
     async login(req, res, next) {
         try {
             //Дастаем данные из тела запроса
-            const {email, password} = req.body;
-
+            const {email, password, smsMessage} = req.body;
             //Обращаемся к юзер-сервису функции login для логинизации нашего пользователя
-            const userData = await UserService.login(email, password);
+            const userData = await UserService.login(email, password, smsMessage);
+
+            //Если userData равно -1 (то есть смс не отправилось на телефон), тогда прокинуть ошибку для повторения запроса
+            if (userData === -1) return res.status(408).json({status:-1, message: 'Повторите запрос на отправку смс'})
+
+            //Если userData равно 1 (то есть смс-сообщение отправилось на телефон), тогда оправить 100 ответ и ожидать следющих действий
+            if (userData === 1) return res.status(201).json({status:1, message:'Получите СМС и введите в форму'});
+
+            //Если userData равно 0, то это означает, что произошла непредвиденная ошибка в UserService
+            if (userData === 0) return res.status(500).json({status:0, message:'Непредвиденная ошибка сервера'});
+
+            //Если userData равно -2, то это значит что введен неправельный код из СМС
+            if (userData === -2) return res.status(400).json({status:-2, message:'Неправильно введен код из СМС-сообщения'})
 
             //Помещаем refreshToken в cookie и задаем ему параметры жизни 30 дней и флаг,
             //который не позволяет изменять куку на стороне клиента с помощью JS

@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const sequelize = require('./db');
 const router = require("./routes/index");
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
+app.use(compression()); // Мидлвар для сжатия gzip
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));

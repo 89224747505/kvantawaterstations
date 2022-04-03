@@ -5,10 +5,13 @@ const User = sequelize.define('user',{
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     email: {type: DataTypes.STRING, unique: false, allowNull:false, validate:{isEmail:true}},
     password: {type: DataTypes.STRING, allowNull: false},
-    role:{type:DataTypes.STRING, allowNull:false, defaultValue: "USER", validate: {isIn:[['USER','ADMIN','EDITOR','AUTHOR']]}},
+    role:{type:DataTypes.STRING, allowNull:false, defaultValue: "USER", validate: {isIn:[['USER','ADMIN']]}},
     isActivated:{type:DataTypes.BOOLEAN, defaultValue:false, allowNull: false},
     activationLink:{type:DataTypes.STRING, allowNull: true},
-    refreshToken:{type: DataTypes.STRING, allowNull: true}
+    refreshToken:{type: DataTypes.STRING(500), allowNull: true},
+    phone:{type: DataTypes.STRING(12), allowNull: false},
+    messageSms:{type: DataTypes.STRING(10), defaultValue:'000000', allowNull: false}
 });
+
 
 module.exports = {User};
