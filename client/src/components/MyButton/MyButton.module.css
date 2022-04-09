@@ -1,0 +1,33 @@
+.wrapper > button {
+    display: block;
+    padding: 1em;
+    box-shadow: 0px 7px 16px -3px rgba(0, 0, 0, 0.5);
+    background: #ffbf00;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #ffbf00), color-stop(100%, #fa9f17));
+    background: -webkit-linear-gradient(top, #ffbf00 0%, #fa9f17 100%);
+    background: linear-gradient(to bottom, #ffbf00 0%, #fa9f17 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffbf00', endColorstr='#fa9f17', GradientType=0 );
+    border: 0;
+    border-radius: 30px;
+    color: #fff;
+    margin-top: 50px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-shadow: -1px -1px #b86200, 0 1px 0 #ecb76b;
+}
+.wrapper > button:focus {
+    outline: none;
+    -webkit-transition: -webkit-transform .25s ease;
+    transition: -webkit-transform .25s ease;
+    transition: transform .25s ease;
+    transition: transform .25s ease, -webkit-transform .25s ease;
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
+}
+
+.wrapper > button:disabled {
+    outline: none;
+    background: #b6b6b6;
+    text-shadow: none;
+}

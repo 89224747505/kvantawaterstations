@@ -1,0 +1,27 @@
+.menu{
+    margin-top: 20px;
+    padding: 2vh 20px;
+    background: rgba(255, 255, 255, 0.2);
+    height: 100vh;
+    border-right: 10px solid #ffbf00;
+    position: fixed;
+    left: -110px;
+    transition: 1s ease;
+}
+
+.menu:hover{
+    left: 0;
+    transition: 1s ease;
+}
+.btn {
+    display: flex;
+    justify-content: center;
+}
+
+.btn > button {
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 25px;
+}

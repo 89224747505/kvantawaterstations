@@ -6,7 +6,6 @@ const TokenService = require('../service/tokenService');
 const SmsService = require('../service/smsService');
 const UserDto = require('../DTO/userDto');
 const ApiError = require('../exeptions/apiError');
-const axios = require('axios');
 
 
 class UserService {
@@ -33,13 +32,7 @@ class UserService {
         //Создаем DTO и выбираем нужные нам поля в объекте для более удобной работы
         const userDto = new UserDto(user);
 
-        //Генерируем новые ACCESS и REFRESH токены
-        const tokens = TokenService.generateTokens({...userDto})
-
-        //Обновляем у пользователя в БД значение refreshToken
-        await User.update({refreshToken:tokens.refreshToken},{where:{id:userDto.id}})
-
-        return {...tokens,user: userDto}
+        return {user: userDto}
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async activate(activationLink){
@@ -57,7 +50,7 @@ class UserService {
         //Ищем пользователя в БД с таким же почтовым адресом
         const user = await User.findOne({where:{email}});
 
-        //Если найден пользователь с таким почтовым адресом, то выдать ошибку регистрации на данный емейл
+        //Если не найден пользователь с таким почтовым адресом, то выдать ошибку регистрации на данный емейл
         if (!user) throw ApiError.BadRequest(`Пользователь ${email} не найден`);
 
         //Если аккаунт не активирован, то отправляется ошибка
@@ -150,9 +143,45 @@ class UserService {
             order: [ [ 'id', 'ASC' ] ]
         };
         const users = await User.findAll(queryParams);
-        return users;
+
+        const responseUsers = [];
+
+        for (let item of users)
+            responseUsers.push({
+                id:item.dataValues.id,
+                email:item.dataValues.email,
+                phone:item.dataValues.phone,
+                role:item.dataValues.role,
+                allowFrames:item.dataValues.allowFrames,
+            })
+
+        return responseUsers;
     }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async accessForUsers(email, role, password, isActivated, phone, allowFrames) {
+
+        //Ищем пользователя в БД с таким же почтовым адресом
+        const user = await User.findOne({where:{email}});
+
+        //Если не найден пользователь с таким почтовым адресом, то выдать ошибку поиска на данный емейл
+        if (!user) throw ApiError.BadRequest(`Пользователь ${email} не найден`);
+
+        //Создаем DTO и выбираем нужные нам поля в объекте для более удобной работы
+        const userDto = new UserDto(user.dataValues);
+        try {
+            //Обновляем у пользователя в БД значение refreshToken
+            await User.update({role, password, isActivated, phone, allowFrames}, {where: {id: userDto.id}})
+
+        } catch (e) {
+            //Возвращаем 0 значит была допущена ошибка при записи на сервер
+            console.log(e);
+            return 0;
+        }
+
+        // Возвращаем 1 значит все хорошо и операция выполнена
+        return 1;
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 

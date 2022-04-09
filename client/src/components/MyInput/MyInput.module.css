@@ -1,0 +1,44 @@
+.wrapper {
+
+}
+.label {
+
+}
+
+input {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: 1em 2em;
+    border: 0;
+    width: 90%;
+    box-sizing: border-box;
+    color: black;
+    font-size: 0.8rem;
+    font-family: Open Sans, Arial, sans-serif;
+    text-shadow: none;
+    border-radius: 25px;
+    background: #9d9d9d;
+    background: -webkit-linear-gradient(top, #9d9d9d 0%, #ffffff 100%);
+    background: linear-gradient(to bottom, #9d9d9d 0%, #ffffff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bc3220', endColorstr='#fa5846', GradientType=0 );
+}
+
+input:focus {
+    outline: none;
+    -webkit-transition: -webkit-transform .25s ease;
+    transition: -webkit-transform .25s ease;
+    transition: transform .25s ease;
+    transition: transform .25s ease, -webkit-transform .25s ease;
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
+}
+
+input::-moz-placeholder {
+    color:black;
+    text-shadow: none;
+}
+input::-webkit-input-placeholder {
+    color:black;
+    text-shadow: none;
+}

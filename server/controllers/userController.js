@@ -126,7 +126,24 @@ class UserController {
             next(e);
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async accessForUsers(req, res, next) {
+        //Дастаем данные из тела запроса
+        const {email, role, password, isActivated, phone, allowFrames} = req.body;
 
+        try {
+            const response = await UserService.accessForUsers(email, role, password, isActivated, phone, allowFrames);
+
+            //Отравляем положительный ответ
+            if (response === 1) return res.status(200).json({status:1, message:"Данные в БД у пользователя обновлены"});
+
+            //Отравляем ответ об ошибке при попытке записи в БД
+            if (response === 0) return res.status(500).json({status:0, message:"Ошибка при записи данных в БД"})
+
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 module.exports = new UserController();

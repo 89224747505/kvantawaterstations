@@ -1,0 +1,32 @@
+.wrapper {
+    padding: 10px;
+}
+
+.hover {
+    padding: 10px;
+    cursor:pointer;
+}
+
+.hoverBack {
+    padding: 10px;
+    cursor:pointer;
+    background: rgba(0,0,0,0.8);
+    border-radius: 10px;
+}
+
+.wrapper > img {
+    width: 50px;
+    height: 50px;
+}
+.hover > img {
+    width: 50px;
+    height: 50px;
+    transform: scale(1.15);
+    transition: 1s ease all;
+}
+.hoverBack > img {
+    width: 50px;
+    height: 50px;
+    transform: scale(1.15);
+    transition: 1s ease all;
+}

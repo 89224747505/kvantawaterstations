@@ -1,6 +1,7 @@
 const Router = require('express');
 const router = new Router();
 const UserController = require('../controllers/userController');
+const NodeController = require('../controllers/nodeController');
 const {body} = require('express-validator');
 const authMiddleware = require('../middleware/authMiddleware');
 const roleMiddleware = require('../middleware/roleMiddleware');
@@ -13,6 +14,11 @@ router.post('/logout',authMiddleware, UserController.logout);
 router.get('/activate/:link', UserController.activate);
 router.get('/refresh', UserController.refresh);
 router.get('/users', authMiddleware, roleMiddleware(["ADMIN"]), UserController.getUsers);
+router.post('/access',authMiddleware, roleMiddleware(["ADMIN"]), UserController.accessForUsers);
 
+router.post('/nodes/add', authMiddleware, roleMiddleware(["ADMIN"]), NodeController.addNode);
+router.delete('/nodes/delete/:id', authMiddleware, roleMiddleware(["ADMIN"]), NodeController.deleteNode)
+router.get('/nodes/allnodes', authMiddleware, roleMiddleware(["ADMIN"]), NodeController.getNodes);
+router.get('/nodes/:id', authMiddleware, roleMiddleware(["ADMIN", "USER"]), NodeController.getNode);
 
 module.exports = router;

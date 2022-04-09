@@ -10,8 +10,14 @@ const User = sequelize.define('user',{
     activationLink:{type:DataTypes.STRING, allowNull: true},
     refreshToken:{type: DataTypes.STRING(500), allowNull: true},
     phone:{type: DataTypes.STRING(12), allowNull: false},
-    messageSms:{type: DataTypes.STRING(10), defaultValue:'000000', allowNull: false}
+    messageSms:{type: DataTypes.STRING(10), defaultValue:'000000', allowNull: false},
+    allowFrames:{type: DataTypes.STRING(1000), defaultValue:'', allowNull: false},
 });
 
+const WaterNodes = sequelize.define('waternodes', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    nameNode:{type:DataTypes.STRING, allowNull: true},
+    ipAddress:{type:DataTypes.STRING, allowNull: true},
+});
 
-module.exports = {User};
+module.exports = {User, WaterNodes};

@@ -6,7 +6,6 @@ const {User} = require("../models/models");
 module.exports = function (req, res, next) {
     //Если метод запроса OPTIONS, то прерываем выполнение и передаем дальше по цепочке выполнения программы
     if (req.method === "OPTIONS") next();
-
     try {
         if (!req.headers.authorization) return res.status(401).json({message: "В заголовке нет ACCESS JWT Token"});
 

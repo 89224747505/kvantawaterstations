@@ -5,6 +5,7 @@ module.exports = class UserDto {
     role;
     phone;
     messageSms;
+    allowFrames;
 
     constructor(model) {
         this.email = model.email;
@@ -13,5 +14,6 @@ module.exports = class UserDto {
         this.role = model.role;
         this.phone = model.phone;
         this.messageSms = model.messageSms;
+        this.allowFrames = model.allowFrames;
     }
 }

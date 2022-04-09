@@ -1,0 +1,26 @@
+.wrapper {
+    width: 400px;
+    padding-left: 30px;
+    position: relative;
+}
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 30px;
+}
+.submitAddNode {
+    width: 50%;
+}
+.checkBox {
+    padding-top: 10px;
+    display: flex;
+}
+.checkBox > div{
+    font-size: 12px;
+}
+.checkBox>input{
+    padding: 0;
+    flex:none;
+    width:min-content;
+}
