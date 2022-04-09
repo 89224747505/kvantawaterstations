@@ -14,6 +14,7 @@ router.post('/logout',authMiddleware, UserController.logout);
 router.get('/activate/:link', UserController.activate);
 router.get('/refresh', UserController.refresh);
 router.get('/users', authMiddleware, roleMiddleware(["ADMIN"]), UserController.getUsers);
+router.delete('/user/:id', authMiddleware, roleMiddleware(["ADMIN"]), UserController.deleteUser);
 router.post('/access',authMiddleware, roleMiddleware(["ADMIN"]), UserController.accessForUsers);
 
 router.post('/nodes/add', authMiddleware, roleMiddleware(["ADMIN"]), NodeController.addNode);

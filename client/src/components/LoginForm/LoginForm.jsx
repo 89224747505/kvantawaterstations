@@ -52,7 +52,6 @@ const LoginForm = () => {
             setPhoneError(false);
             setPhoneDirty(false);
         }
-
     }
 
     const changeCheckBox = () => {
@@ -177,7 +176,7 @@ const LoginForm = () => {
                             />
                         </div>
                         <div className={classes.lForgot}>
-                            <input type="checkbox" checked={checkReg} onChange={changeCheckBox}/>
+                            <input className={classes.customCheckbox} type="checkbox" checked={checkReg} onChange={changeCheckBox}/>
                             <label>Зарегистрировать нового пользователя</label>
                         </div>
                         <div>
@@ -228,7 +227,7 @@ const LoginForm = () => {
                         />
                     </div>
                     <div className={classes.lForgot}>
-                        <input type="checkbox" checked={checkReg} onChange={changeCheckBox}/>
+                        <input className={classes.customCheckbox} type="checkbox" checked={checkReg} onChange={changeCheckBox}/>
                         <label>Зарегистрировать нового пользователя</label>
                     </div>
                     <div>

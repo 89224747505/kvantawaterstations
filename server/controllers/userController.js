@@ -144,6 +144,23 @@ class UserController {
             next(e);
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async deleteUser(req, res, next) {
+        try {
+            //Доставем из строки параметров /user/:id - id и помещаем ее в константу userId
+            const userId = req.params.id;
+
+            //Обращаемся к функции удаления юзер-сервиса и передаем туда userId
+            const response = await UserService.deleteUser(userId);
+
+            //Отравляем положительный ответ
+            if (response.status === 1) return res.status(200).json({status:1, message:"Пользователь удален"});
+
+        }catch (e){
+            next(e);
+        }
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 module.exports = new UserController();

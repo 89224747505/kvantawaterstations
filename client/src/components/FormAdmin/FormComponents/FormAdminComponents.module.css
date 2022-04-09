@@ -2,6 +2,10 @@
     width: 400px;
     padding-left: 30px;
     position: relative;
+    padding-bottom: 30px;
+}
+.inputPB {
+    padding: 10px 0;
 }
 .title {
     font-size: 24px;
@@ -18,9 +22,76 @@
 }
 .checkBox > div{
     font-size: 12px;
+    padding-left: 5px;
 }
 .checkBox>input{
     padding: 0;
     flex:none;
     width:min-content;
+}
+.checkBoxPB{
+    padding-bottom: 10px;
+}
+.redBorder {
+    outline: 1px solid red;
+    text-decoration-thickness: 0.7px;
+    text-decoration-color: red;
+    text-decoration-style: wavy;
+    text-decoration-line:underline;
+}
+.wrapSelectNodes {
+    display: flex;
+}
+
+
+.btnsAddDelete {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2px;
+    text-align: center;
+}
+.btnsAddDelete > div:hover {
+    cursor: pointer;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #ffbf00), color-stop(100%, #fa9f17));
+    background: -webkit-linear-gradient(top, #ffbf00 0%, #fa9f17 100%);
+    background: linear-gradient(to bottom, #ffbf00 0%, #fa9f17 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffbf00', endColorstr='#fa9f17', GradientType=0 );
+}
+
+.btnsAddDelete > div:active {
+    cursor:wait;
+    background:#9d9d9d;
+}
+
+.btnFromLeft {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    background: #9d9d9d;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #9d9d9d), color-stop(100%, #ffffff));
+    background: -webkit-linear-gradient(top, #9d9d9d 0%, #ffffff 100%);
+    background: linear-gradient(to bottom, #9d9d9d 0%, #ffffff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='##9d9d9d', endColorstr='#ffffff', GradientType=0 );
+}
+
+.btnFromRight {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    background: #9d9d9d;
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #9d9d9d), color-stop(100%, #ffffff));
+    background: -webkit-linear-gradient(top, #9d9d9d 0%, #ffffff 100%);
+    background: linear-gradient(to bottom, #9d9d9d 0%, #ffffff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='##9d9d9d', endColorstr='#ffffff', GradientType=0 );
+}
+
+.addNodes {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }

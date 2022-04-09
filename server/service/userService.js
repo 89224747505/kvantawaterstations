@@ -183,6 +183,18 @@ class UserService {
         return 1;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async deleteUser(id) {
+        //Ищем пользователя в БД с таким же id адресом
+        const candidate = await User.findOne({where:{id}});
+
+        //Если не найден пользователь с таким id, то выдать ошибку удаления узла
+        if (!candidate) throw ApiError.BadRequest(`Пользователь с id - ${id} не найден в БД`);
+
+        if (candidate) {
+            await candidate.destroy();
+            return {status: 1, message: "Узел удален из БД"}
+        }
+    }
 }
 
 module.exports = new UserService();

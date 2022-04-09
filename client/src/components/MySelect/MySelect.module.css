@@ -1,3 +1,40 @@
 .wrapper {
+    max-width: 75%;
+    box-sizing: border-box;
+    border-radius: 10px 0 0 10px;
+    border: 0;
+    padding: 10px;
+    font-size: 14px;
+    color: black;
+    font-family: Open Sans, Arial, sans-serif;
+    text-shadow: none;
+    background: #9d9d9d;
+    background: -webkit-linear-gradient(top, #9d9d9d 0%, #ffffff 100%);
+    background: linear-gradient(to bottom, #9d9d9d 0%, #ffffff 100%);
+    -webkit-transition: -webkit-transform .5s ease;
+    transition: -webkit-transform .5s ease;
+    transition: transform .5s ease;
+    transition: transform .5s ease, -webkit-transform .5s ease;
+}
+.wrapper:focus {
+    outline: none;
+    -webkit-transition: -webkit-transform .5s ease;
+    transition: -webkit-transform .5s ease;
+    transition: transform .5s ease;
+    transition: transform .5s ease, -webkit-transform .5s ease;
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
+}
+.widthAll {
+    max-width: 100%;
+    min-width: 150px;
+}
 
+.widthAll:focus {
+    transform: none;
+}
+
+.borderRight {
+    border-radius: 25px;
+    font-size: 12px;
 }

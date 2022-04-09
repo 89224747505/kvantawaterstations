@@ -43,6 +43,14 @@ export default class Store {
     setUsers(users) {this.users = users;}
     setMessage(message) {this.message = message;}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async deleteNode (id) {
+        try {
+            return NodeService.deleteNode(id);
+        } catch (e) {
+            console.log("Ошибка удаления узла", e)
+        }
+    }
+
     async getNodes () {
         try {
             return NodeService.getNodes();
@@ -123,20 +131,18 @@ export default class Store {
     }
 
     async getUsers() {
-        this.setLoading(true);
         try {
-            const response = await UserService.fetchUsers();
-            if (response.err === 403) {
-                this.setMessage(response.message);
-                this.setLoading(false);
-                return
-            }
-            this.setUsers(response.data);
+            return UserService.fetchUsers();
         } catch (e) {
             console.log("Ошибка получения всех пользователей", e);
-        } finally {
-            this.setLoading(false);
         }
+    }
 
+    async deleteUser(id) {
+        try {
+            return UserService.deleteUser(id);
+        } catch (e) {
+            console.log("Ошибка получения всех пользователей", e);
+        }
     }
 }

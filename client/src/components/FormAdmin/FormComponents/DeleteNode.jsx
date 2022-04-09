@@ -11,10 +11,24 @@ const DeleteNode = () => {
     const [checkAllow, setCheckAllow] = useState(false);
     const [selectedValue, setSelectedValue] = useState('');
 
+    useEffect(() => {
+        store.getNodes()
+            .then(response =>{
+                store.setAllNodes(response.data);
+            })
+    },[])
+
     const deleteNodeFromDB = () => {
-        alert('hallo');
         store.setLoading(true);
-        setTimeout(() => store.setLoading(false), 3000);
+        store.deleteNode(selectedValue)
+            .then(response => {
+                store.setLoading(false);
+                store.getNodes()
+                    .then(response =>{
+                        store.setAllNodes(response.data);
+                    })
+                setCheckAllow(false);
+            })
     };
 
     const changeCheckBox = () => setCheckAllow(!checkAllow);
@@ -29,11 +43,16 @@ const DeleteNode = () => {
 
             <MySelect
                 name="elementForDelete"
-                size="20"
+                size="17"
                 value={selectedValue}
                 onChange={(e)=>setSelectedValue(e.target.value)}
             >
-                {store.allNodes.map((value, index)=> <option value={value.id} key={value.id}>{value.nameNode} ► {value.ipAddress}</option>)}
+                {store.allNodes.map(value =>
+                    <option
+                        title={`${value.nameNode} ${value.ipAddress}`}
+                        value={value.id}
+                        key={value.id}
+                    >{value.nameNode} ► {value.ipAddress}</option>)}
             </MySelect>
 
             <div className={classes.checkBox}>

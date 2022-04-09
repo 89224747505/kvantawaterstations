@@ -33,6 +33,10 @@ const FormAdmin = () => {
             .then(response =>{
                 store.setAllNodes(response.data);
             });
+        store.getUsers()
+            .then(response => {
+                store.setUsers(response.data);
+            })
     });
 
     const clearAllForms = () => {
