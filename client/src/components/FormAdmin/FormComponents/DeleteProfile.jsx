@@ -15,7 +15,6 @@ const DeleteProfile = () => {
         store.getUsers()
             .then(response => {
                 store.setUsers(response.data);
-                console.log(response.data)
             })
     },[])
 

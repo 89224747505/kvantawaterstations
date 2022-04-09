@@ -43,6 +43,14 @@ export default class Store {
     setUsers(users) {this.users = users;}
     setMessage(message) {this.message = message;}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async createNewProfileAdmin (email, phone, password, role, isActivated, allowFrames) {
+        try {
+            return AuthService.createNewProfileAdmin(email, phone, password, role, isActivated, allowFrames);
+        } catch(e) {
+            console.log("Ошибка удаления узла", e)
+        }
+    }
+
     async deleteNode (id) {
         try {
             return NodeService.deleteNode(id);

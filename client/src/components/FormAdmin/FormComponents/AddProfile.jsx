@@ -14,8 +14,9 @@ const AddProfile = () => {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [role, setRole] = useState('USER');
-    const [selectedValueLeft, setSelectedValueLeft] = useState('1');
+    const [selectedValueLeft, setSelectedValueLeft] = useState('0');
     const [selectedValueRight, setSelectedValueRight] = useState('');
+    const [rightNodesArray, setRightNodesArray] = useState([]);
     const [leftNodesArray, setLeftNodesArray] = useState([]);
 
     const [isActivated, setIsActivated] = useState(false);
@@ -29,7 +30,7 @@ const AddProfile = () => {
     useEffect(() => {
         store.getNodes()
             .then(response => {
-                store.setAllNodes(response.data);
+                setLeftNodesArray(response.data);
             })
     }, [])
 
@@ -71,15 +72,49 @@ const AddProfile = () => {
 
     const registrationNewProfile = (event) => {
         event.preventDefault();
-        console.log(selectedValueLeft)
+        if (emailError || emailDirty || passwordError || passwordDirty || phoneError || phoneDirty) return;
+
+        let allowFrames = '';
+        for (let item of rightNodesArray)
+            allowFrames += item.id+'/';
+        allowFrames = allowFrames.slice(0, allowFrames.length-1);
+        store.setLoading(true);
+        store.createNewProfileAdmin(email, phone, password, role, isActivated, allowFrames)
+            .then(response => {
+                store.setLoading(false);
+                setEmail('');
+                setPhone('');
+                setPassword('');
+                setIsActivated(false);
+                setRole('USER');
+                store.getNodes()
+                    .then(response => {
+                        setLeftNodesArray(response.data);
+                    })
+                setRightNodesArray([]);
+            });
     }
 
     const addNodeToArray = () => {
+        if (leftNodesArray.length === 0) return
 
+        const arr = rightNodesArray;
+        arr.push(leftNodesArray[selectedValueLeft]);
+        setRightNodesArray(arr);
+        setSelectedValueRight('0');
+        setSelectedValueLeft('0');
+        setLeftNodesArray(leftNodesArray.filter((value, index)=> index !== Number(selectedValueLeft)));
     }
 
     const deleteNodeFromArray = () => {
+        if (rightNodesArray.length === 0) return
 
+        const arr = leftNodesArray;
+        arr.push(rightNodesArray[selectedValueRight]);
+        setLeftNodesArray(arr);
+        setSelectedValueRight('0');
+        setSelectedValueLeft('0');
+        setRightNodesArray(rightNodesArray.filter((value, index)=> index !== Number(selectedValueRight)));
     }
 
     const blurHandler = (event) => {
@@ -166,11 +201,12 @@ const AddProfile = () => {
                             value={selectedValueLeft}
                             onBlur={(e) => setSelectedValueLeft(e.target.value)}
                             onChange={(e) => setSelectedValueLeft(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' ? addNodeToArray() : null}
                         >
-                            {store.allNodes.map(value =>
+                            {leftNodesArray.map((value, index)=>
                                 <option
                                     title={`${value.nameNode} ${value.ipAddress}`}
-                                    value={value.id}
+                                    value={index}
                                     key={value.id}
                                 >{value.nameNode}</option>)}
                         </MySelect>
@@ -187,11 +223,12 @@ const AddProfile = () => {
                             value={selectedValueRight}
                             onBlur={(e) => setSelectedValueRight(e.target.value)}
                             onChange={(e) => setSelectedValueRight(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' ? deleteNodeFromArray() : null}
                         >
-                            {leftNodesArray.map(value =>
+                            {rightNodesArray.map((value, index) =>
                                 <option
                                     title={`${value.nameNode} ${value.ipAddress}`}
-                                    value={value.id}
+                                    value={index}
                                     key={value.id}
                                 >{value.nameNode}</option>)}
                         </MySelect>

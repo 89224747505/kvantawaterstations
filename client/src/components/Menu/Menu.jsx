@@ -10,7 +10,6 @@ import MenuButton from "../MenuButton/MenuButton";
 
 const Menu = () => {
     const {store} = useContext(Context);
-    console.log(store.isFormCurrentNode)
         return (
             <div className={classes.menu}>
                 <div className={classes.btn}>
