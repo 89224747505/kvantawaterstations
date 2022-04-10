@@ -173,6 +173,29 @@ class UserController {
             next(e);
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async updateUser(req, res, next) {
+        try {
+            //Дастаем данные из тела запроса
+            const {id, email, role, password, isActivated, phone, allowFrames} = req.body;
+
+            //Обращаемся к функции обновления юзер-сервиса и передаем туда userId
+            const response = await UserService.updateUser(id, email, phone, password, role, isActivated, allowFrames);
+
+            //Отравляем положительный ответ
+            if (response === 1) return res.status(200).json({
+                status: 1,
+                message: "Данные в БД у пользователя обновлены"
+            });
+
+            //Отравляем ответ об ошибке при попытке записи в БД
+            if (response === 0) return res.status(500).json({status: 0, message: "Ошибка при записи данных в БД"})
+        } catch(e) {
+            console.log("ОШИБКАОШИБКАОШИБКАОШИБКАОШИБКАОШИБКАОШИБКА");
+            console.log(e);
+            next(e);
+        }
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async createNewProfileAdmin(req, res, next) {

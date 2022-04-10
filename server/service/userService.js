@@ -152,6 +152,7 @@ class UserService {
                 email:item.dataValues.email,
                 phone:item.dataValues.phone,
                 role:item.dataValues.role,
+                isActivated:item.dataValues.isActivated,
                 allowFrames:item.dataValues.allowFrames,
             })
 
@@ -194,6 +195,48 @@ class UserService {
             await candidate.destroy();
             return {status: 1, message: "Узел удален из БД"}
         }
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async updateUser(id, email, phone, password, role, isActivated, allowFrames) {
+
+        //Ищем пользователя в БД с таким же id адресом
+        const candidate = await User.findOne({where:{id}});
+
+        //Если не найден пользователь с таким id, то выдать ошибку удаления узла
+        if (!candidate) throw ApiError.BadRequest(`Пользователь с id - ${id} не найден в БД`);
+
+        //Получаем полный список пользователей в БД
+        let queryParams = {
+            where: {},
+            order: [ [ 'id', 'ASC' ] ]
+        };
+        const users = await User.findAll(queryParams);
+
+        for (let item of users)
+            if ((email === item.dataValues.email)&&(id !== item.dataValues.id)) throw ApiError.BadRequest(`Пользователь с таким e-mail уже есть в БД`);
+
+        //Создаем DTO и выбираем нужные нам поля в объекте для более удобной работы
+        const userDto = new UserDto(candidate.dataValues);
+
+
+        try {
+            //Обновляем у пользователя в БД значения переданные в параметрах
+            if (password === '')
+                await User.update({email, phone, role, isActivated, allowFrames}, {where: {id: userDto.id}})
+            else
+            {
+                //Хэшируем переданный нам пароль для записи в БД закодированного пароля
+                const hashPassword = await bcrypt.hash(password, 3);
+
+                await User.update({email, phone, password:hashPassword, role, isActivated, allowFrames}, {where: {id: userDto.id}})
+            }
+        } catch (e) {
+            //Возвращаем 0 значит была допущена ошибка при записи на сервер
+            console.log(e);
+            return 0;
+        }
+        // Возвращаем 1 значит все хорошо и операция выполнена
+        return 1;
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async createNewProfileAdmin (email, phone, password, role, isActivated, allowFrames) {

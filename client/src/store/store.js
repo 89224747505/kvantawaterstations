@@ -153,4 +153,12 @@ export default class Store {
             console.log("Ошибка получения всех пользователей", e);
         }
     }
+
+    async updateUserProfile(id, email, phone, password, role, isActivated, allowFrames) {
+        try {
+            return UserService.updateUser(id, email, phone, password, role, isActivated, allowFrames);
+        } catch(e) {
+            console.log("Ошибка обновления пользователя в БД", e);
+        }
+    }
 }

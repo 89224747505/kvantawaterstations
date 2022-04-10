@@ -19,6 +19,7 @@ router.get('/refresh', UserController.refresh);
 router.get('/users', authMiddleware, roleMiddleware(["ADMIN"]), UserController.getUsers);
 router.delete('/user/:id', authMiddleware, roleMiddleware(["ADMIN"]), UserController.deleteUser);
 router.post('/access',authMiddleware, roleMiddleware(["ADMIN"]), UserController.accessForUsers);
+router.put('/user/update', authMiddleware, roleMiddleware(["ADMIN"]), UserController.updateUser);
 
 router.post('/nodes/add', authMiddleware, roleMiddleware(["ADMIN"]), NodeController.addNode);
 router.delete('/nodes/delete/:id', authMiddleware, roleMiddleware(["ADMIN"]), NodeController.deleteNode)
