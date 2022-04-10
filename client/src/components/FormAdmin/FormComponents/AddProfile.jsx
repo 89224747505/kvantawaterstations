@@ -201,7 +201,7 @@ const AddProfile = () => {
                             value={selectedValueLeft}
                             onBlur={(e) => setSelectedValueLeft(e.target.value)}
                             onChange={(e) => setSelectedValueLeft(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' ? addNodeToArray() : null}
+                            onKeyDown={(e) => (e.key === 'Enter') || (e.key === 'ArrowRight') ? addNodeToArray() : null}
                         >
                             {leftNodesArray.map((value, index)=>
                                 <option
@@ -223,7 +223,7 @@ const AddProfile = () => {
                             value={selectedValueRight}
                             onBlur={(e) => setSelectedValueRight(e.target.value)}
                             onChange={(e) => setSelectedValueRight(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' ? deleteNodeFromArray() : null}
+                            onKeyDown={(e) => (e.key === 'Enter') || (e.key === 'ArrowLeft') ? deleteNodeFromArray() : null}
                         >
                             {rightNodesArray.map((value, index) =>
                                 <option
@@ -236,6 +236,8 @@ const AddProfile = () => {
                 </div>
                 <div className={classes.submitAddNode}>
                     <MyButton
+                        disabled={emailError || passwordError || phoneError || phoneDirty || emailDirty || passwordDirty
+                                    || email === '' || phone === '' || password === ''}
                         onClick={registrationNewProfile}
                     >Создать узел
                     </MyButton>

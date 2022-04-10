@@ -195,6 +195,25 @@ class UserService {
             return {status: 1, message: "Узел удален из БД"}
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async createNewProfileAdmin (email, phone, password, role, isActivated, allowFrames) {
+        //Ищем пользователя в БД с таким же почтовым адресом
+        const candidate = await User.findOne({where:{email}});
+
+        //Если найден пользователь с таким почтовым адресом, то выдать ошибку регистрации на данный емейл
+        if (candidate) throw ApiError.BadRequest(`Пользователь ${email} уже существует`);
+
+        //Хэшируем переданный нам пароль для записи в БД закодированного пароля
+        const hashPassword = await bcrypt.hash(password, 3);
+
+        //Создаем нового пользователя
+        const user = await User.create({email, phone, password:hashPassword, role, isActivated, allowFrames});
+
+        //Создаем DTO и выбираем нужные нам поля в объекте для более удобной работы
+        const userDto = new UserDto(user);
+
+        return {user: userDto}
+    }
 }
 
 module.exports = new UserService();

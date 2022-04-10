@@ -21,14 +21,15 @@ class UserController {
 
             //Помещаем refreshToken в cookie и задаем ему параметры жизни 30 дней и флаг,
             //который не позволяет изменять куку на стороне клиента с помощью JS
-            res.cookie('refreshToken', userData.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
+            res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
 
             //Отправляем данные на сервер со статусом 200 и данными полученными из сервиса
             return res.status(200).json(userData);
-        }catch (e){
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async login(req, res, next) {
         try {
@@ -38,27 +39,31 @@ class UserController {
             const userData = await UserService.login(email, password, smsMessage);
 
             //Если userData равно -1 (то есть смс не отправилось на телефон), тогда прокинуть ошибку для повторения запроса
-            if (userData === -1) return res.status(408).json({status:-1, message: 'Повторите запрос на отправку смс'})
+            if (userData === -1) return res.status(408).json({status: -1, message: 'Повторите запрос на отправку смс'})
 
             //Если userData равно 1 (то есть смс-сообщение отправилось на телефон), тогда оправить 100 ответ и ожидать следющих действий
-            if (userData === 1) return res.status(201).json({status:1, message:'Получите СМС и введите в форму'});
+            if (userData === 1) return res.status(201).json({status: 1, message: 'Получите СМС и введите в форму'});
 
             //Если userData равно 0, то это означает, что произошла непредвиденная ошибка в UserService
-            if (userData === 0) return res.status(500).json({status:0, message:'Непредвиденная ошибка сервера'});
+            if (userData === 0) return res.status(500).json({status: 0, message: 'Непредвиденная ошибка сервера'});
 
             //Если userData равно -2, то это значит что введен неправельный код из СМС
-            if (userData === -2) return res.status(400).json({status:-2, message:'Неправильно введен код из СМС-сообщения'})
+            if (userData === -2) return res.status(400).json({
+                status: -2,
+                message: 'Неправильно введен код из СМС-сообщения'
+            })
 
             //Помещаем refreshToken в cookie и задаем ему параметры жизни 30 дней и флаг,
             //который не позволяет изменять куку на стороне клиента с помощью JS
-            res.cookie('refreshToken', userData.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
+            res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
 
             //Отправляем данные на сервер со статусом 200 и данными полученными из сервиса
             return res.status(200).json(userData);
-        }catch (e){
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async logout(req, res, next) {
         try {
@@ -75,11 +80,12 @@ class UserController {
             res.clearCookie('refreshToken');
 
             //Отправляем ответ на
-            return res.status(200).json({"message":"Пользователь вышел из профиля", resultCode:0});
-        }catch (e){
+            return res.status(200).json({"message": "Пользователь вышел из профиля", resultCode: 0});
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async activate(req, res, next) {
         try {
@@ -91,10 +97,11 @@ class UserController {
 
             //Делаем редирект с серверного URL на клиентский URL
             return res.redirect(process.env.CLIENT_URL)
-        }catch (e){
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async refresh(req, res, next) {
         try {
@@ -109,23 +116,25 @@ class UserController {
 
             //Помещаем refreshToken в cookie и задаем ему параметры жизни 30 дней и флаг,
             //который не позволяет изменять куку на стороне клиента с помощью JS
-            res.cookie('refreshToken', userData.refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
+            res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
 
             //Отправляем данные на сервер со статусом 200 и данными полученными из сервиса
             return res.status(200).json(userData);
-        }catch (e){
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async getUsers(req, res, next) {
         try {
             const users = await UserService.getAllUsers();
             return res.status(200).json(users);
-        }catch (e){
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async accessForUsers(req, res, next) {
         //Дастаем данные из тела запроса
@@ -135,15 +144,19 @@ class UserController {
             const response = await UserService.accessForUsers(email, role, password, isActivated, phone, allowFrames);
 
             //Отравляем положительный ответ
-            if (response === 1) return res.status(200).json({status:1, message:"Данные в БД у пользователя обновлены"});
+            if (response === 1) return res.status(200).json({
+                status: 1,
+                message: "Данные в БД у пользователя обновлены"
+            });
 
             //Отравляем ответ об ошибке при попытке записи в БД
-            if (response === 0) return res.status(500).json({status:0, message:"Ошибка при записи данных в БД"})
+            if (response === 0) return res.status(500).json({status: 0, message: "Ошибка при записи данных в БД"})
 
         } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     async deleteUser(req, res, next) {
         try {
@@ -154,13 +167,32 @@ class UserController {
             const response = await UserService.deleteUser(userId);
 
             //Отравляем положительный ответ
-            if (response.status === 1) return res.status(200).json({status:1, message:"Пользователь удален"});
+            if (response.status === 1) return res.status(200).json({status: 1, message: "Пользователь удален"});
 
-        }catch (e){
+        } catch (e) {
             next(e);
         }
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    async createNewProfileAdmin(req, res, next) {
+        try {
+            //Дастаем данные из тела запроса
+            const {email, phone, password, role, isActivated, allowFrames} = req.body;
+
+            //Регистрируем нового пользователя с помощью сервиса регистарции пользователей
+            const userData = await UserService.createNewProfileAdmin(email, phone, password, role, isActivated, allowFrames);
+
+            //Помещаем refreshToken в cookie и задаем ему параметры жизни 30 дней и флаг,
+            //который не позволяет изменять куку на стороне клиента с помощью JS
+            res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000})
+
+            //Отправляем данные на сервер со статусом 200 и данными полученными из сервиса
+            return res.status(200).json(userData);
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 module.exports = new UserController();
